@@ -4,20 +4,13 @@ from itertools import count
 
 
 def get_vacancies(programming_language):
-    all_vacancies = []
-    for page in count(0):
-        url = 'https://api.hh.ru/vacancies'
-        payload = {"text": programming_language, "area": 1}
-        response = requests.get(url, params=payload)
-        response.raise_for_status()
-        vacancies = response.json()
+    url = 'https://api.hh.ru/vacancies'
+    payload = {"text": programming_language, "area": 1}
+    response = requests.get(url, params=payload)
+    response.raise_for_status()
+    vacancies = response.json()
 
-        if 'pages' in vacancies:
-            if page >= vacancies['pages'] -1:
-                break
-        all_vacancies.extend(vacancies['items'])
-
-    return all_vacancies
+    return vacancies
 
 
 def predict_rub_salary(currency_vac, from_salary, to_salary):
@@ -37,9 +30,9 @@ def statistic_hh():
 
     for programming_language in programming_languages:
         all_salarys = []
-        vacancies = get_vacancies(programming_language)
 
-        for programmer_vacancy in vacancies:
+        vacancies = get_vacancies(programming_language)
+        for programmer_vacancy in vacancies['items']:
             salary_prog = programmer_vacancy['salary']
 
             if salary_prog != None:
@@ -51,7 +44,7 @@ def statistic_hh():
                 all_salarys.append(average_salary)
 
         statistic_vacancies[programming_language] = {
-            "vacancies_found": len(vacancies),
+            "vacancies_found": vacancies['found'],
             "vacancies_processed": len(all_salarys),
             "average_salary": int(sum(all_salarys)/len(all_salarys))
         }
