@@ -1,124 +1,175 @@
 import requests
 import os
 
-from pprint import pprint
 from itertools import count
 from dotenv import load_dotenv
+from terminaltables import SingleTable
 
 
-def get_vacancies_hh(programming_language, hh_link):
-    hh_payload = {
+def get_vacancies_HH(programming_language, HH_link):
+    HH_payload = {
         "text": programming_language, 
         "area": 1
         }
-    response_hh = requests.get(hh_link, params=hh_payload)
-    response_hh.raise_for_status()
-    hh_vacancies = response_hh.json()
+    response_HH = requests.get(HH_link, params=HH_payload)
+    response_HH.raise_for_status()
+    HH_vacancies = response_HH.json()
+    return HH_vacancies
 
-    return hh_vacancies
 
-
-def predict_rub_salary_hh(currency_vac_hh, from_salary_hh, to_salary_hh):
-    if currency_vac_hh != 'RUR' or 'RUB':
-        if from_salary_hh and to_salary_hh:
-            average_salary_hh = int((from_salary_hh+to_salary_hh)/2)
-        elif from_salary_hh:
-            average_salary_hh = int(from_salary_hh*1.2)
+def predict_rub_salary_HH(currency_vac_HH, from_salary_HH, to_salary_HH):
+    if currency_vac_HH != 'RUR' or 'RUB':
+        if from_salary_HH and to_salary_HH:
+            average_salary_HH = int((from_salary_HH+to_salary_HH)/2)
+        elif from_salary_HH:
+            average_salary_HH = int(from_salary_HH*1.2)
         else:
-            average_salary_hh = int(to_salary_hh*0.8)
-    return average_salary_hh
+            average_salary_HH = int(to_salary_HH*0.8)
+    return average_salary_HH
 
 
-def statistic_hh(programming_languages, hh_link):
-    statistic_vacancies_hh = {}
+def statistic_HH(programming_languages, HH_link):
+    statistic_vacancies_HH = {}
 
     for programming_language in programming_languages:
-        all_salarys_hh = []
-        hh_vacancies = get_vacancies_hh(programming_language, hh_link)
+        all_salarys_HH = []
+        HH_vacancies = get_vacancies_HH(programming_language, HH_link)
 
-        for programmer_vacancy_hh in hh_vacancies['items']:
+        for programmer_vacancy_HH in HH_vacancies['items']:
                 for page in count(0):
-                    if 'pages' in hh_vacancies:
-                        if page >= hh_vacancies['pages'] - 1:
+                    if 'pages' in HH_vacancies:
+                        if page >= HH_vacancies['pages'] - 1:
                             break
 
-                    salary_programming_hh = programmer_vacancy_hh['salary']
-                    if salary_programming_hh != None:
-                        currency_vac_hh = salary_programming_hh.get('currency')
-                        from_salary_hh = salary_programming_hh['from']
-                        to_salary_hh = salary_programming_hh['to']
-                        hh_average_salary = predict_rub_salary_hh(currency_vac_hh, from_salary_hh, to_salary_hh)
-                        all_salarys_hh.append(hh_average_salary)
+                    salary_programming_HH = programmer_vacancy_HH['salary']
+                    if salary_programming_HH != None:
+                        currency_vac_HH = salary_programming_HH.get('currency')
+                        from_salary_HH = salary_programming_HH['from']
+                        to_salary_HH = salary_programming_HH['to']
+                        HH_average_salary = predict_rub_salary_HH(currency_vac_HH, from_salary_HH, to_salary_HH)
+                        all_salarys_HH.append(HH_average_salary)
 
-        statistic_vacancies_hh[programming_language] = {
-            "hh_vacancies_found": hh_vacancies['found'],
-            "hh_vacancies_processed": len(all_salarys_hh),
-            "hh_average_salary": int(sum(all_salarys_hh)/len(all_salarys_hh))
+        statistic_vacancies_HH[programming_language] = {
+            "HH_vacancies_found": HH_vacancies['found'],
+            "HH_vacancies_processed": len(all_salarys_HH),
+            "HH_average_salary": int(sum(all_salarys_HH) / len(all_salarys_HH))
         }
-    pprint(statistic_vacancies_hh)
+    return statistic_vacancies_HH
 
 
-def get_vacancies_sj(programming_language, sj_key, sj_link):
-    sj_payload = {
+def HH_table(statistic_vacancies_HH):
+    TABLE_HH = [
+        ['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата'],
+    ]
+    for programming_language, HH_vacancies_key in statistic_vacancies_HH.items():
+        TABLE_HH.append([
+            programming_language,
+            HH_vacancies_key['HH_vacancies_found'],
+            HH_vacancies_key['HH_vacancies_processed'],
+            HH_vacancies_key['HH_average_salary']
+        ])
+    HH_table_vacancies = SingleTable(TABLE_HH)
+    HH_table_vacancies.title = 'HeadHunter Moscow'
+    print(HH_table_vacancies.table)
+
+
+def get_vacancies_SJ(programming_language, SJ_key, SJ_link, page):
+    SJ_payload = {
         'period': 0,
         'town': 4,
         'keyword': programming_language,
-        'app_key': sj_key
+        'app_key': SJ_key,
+        'page': page
     }
-    response_sj = requests.get(sj_link, params=sj_payload)
-    response_sj.raise_for_status()
-    sj_vacancies = response_sj.json()
 
-    return sj_vacancies
+    response_SJ = requests.get(SJ_link, params=SJ_payload)
+    response_SJ.raise_for_status()
+    SJ_vacancies = response_SJ.json()
+    return SJ_vacancies
 
 
-def predict_rub_salary_sj(currency_vac_sj, from_sj_salary, to_sj_salary):
-    if currency_vac_sj == 'rub':
-        if from_sj_salary and to_sj_salary:
-            average_salary_sj = int((from_sj_salary+to_sj_salary)/2)
-        elif from_sj_salary:
-            average_salary_sj = int(from_sj_salary*1.2)
+def predict_rub_salary_SJ(currency_vac_SJ, from_SJ_salary, to_SJ_salary):
+    if currency_vac_SJ == 'rub':
+        if from_SJ_salary and to_SJ_salary:
+            average_salary_SJ = int((from_SJ_salary + to_SJ_salary) / 2)
+        elif from_SJ_salary:
+            average_salary_SJ = int(from_SJ_salary * 1.2)
+        elif to_SJ_salary:
+            average_salary_SJ = int(to_SJ_salary * 0.8)
         else:
-            average_salary_sj = int(to_sj_salary*0.8)
-    return average_salary_sj
+            average_salary_SJ = None
+    else:
+        average_salary_SJ = None
+    return average_salary_SJ
 
 
-def statistic_sj(programming_languages, sj_key, sj_link):
-    statistic_vacancies_sj = {}
+def statistic_SJ(programming_languages, SJ_key, SJ_link):
+    vacancies_by_language = {}
 
     for programming_language in programming_languages:
-        all_salarys_sj = []
-        sj_vacancies = get_vacancies_sj(programming_language, sj_key, sj_link)
+        salary_vacancies = []
 
-        for sj_professions in sj_vacancies['objects']:
-            for page in count(0):
-                if page >= len(sj_vacancies):
-                    break
+        for page in count(0):
+            SJ_vacancies = get_vacancies_SJ(programming_language, SJ_key, SJ_link, page=page)
+            total_vacancies = SJ_vacancies['total']
 
-                currency_vac_sj = sj_professions.get('currency')
-                from_sj_salary = sj_professions['payment_from']
-                to_sj_salary = sj_professions['payment_to']
-                sj_average_salary = predict_rub_salary_sj(currency_vac_sj, from_sj_salary, to_sj_salary)
-                all_salarys_sj.append(sj_average_salary)
+            if not SJ_vacancies['objects']:
+                break
 
-            statistic_vacancies_sj[programming_language] = {
-                    "sj_vacancies_found": len(sj_vacancies),
-                    "sj_vacancies_processed": len(all_salarys_sj),
-                    "sj_average_salary": int(sum(all_salarys_sj)/len(all_salarys_sj))
-                }
-    pprint(statistic_vacancies_sj)
+            for SJ_vacancy in SJ_vacancies['objects']:
+                currency_vac_SJ = SJ_vacancy.get('currency')
+                from_SJ_salary = SJ_vacancy['payment_from']
+                to_SJ_salary = SJ_vacancy['payment_to']
+
+                if from_SJ_salary or to_SJ_salary:
+                    SJ_average_salary = predict_rub_salary_SJ(currency_vac_SJ, from_SJ_salary, to_SJ_salary)
+
+                    if SJ_average_salary != None:
+                        salary_vacancies.append(SJ_average_salary)
+
+        average_salary = None
+        if salary_vacancies:
+            average_salary = int(sum(salary_vacancies) / len(salary_vacancies))
+            
+        vacancies_by_language[programming_language] = {
+            'SJ_vacancies_found': total_vacancies,
+            'SJ_vacancies_processed': len(salary_vacancies),
+            'SJ_average_salary': average_salary
+        }
+    return vacancies_by_language
+
+
+def SJ_table(statistic_vacancies_SJ):
+    TABLE_SJ = [
+        ['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата'],
+    ]
+
+    for programming_language, SJ_vacancies_key in statistic_vacancies_SJ.items():
+        TABLE_SJ.append([
+            programming_language,
+            SJ_vacancies_key['SJ_vacancies_found'],
+            SJ_vacancies_key['SJ_vacancies_processed'],
+            SJ_vacancies_key['SJ_average_salary']
+        ])
+
+    SJ_table_vacancies = SingleTable(TABLE_SJ)
+    SJ_table_vacancies.title = 'SuperJob Moscow'
+    print(SJ_table_vacancies.table)
 
 
 def main():
     load_dotenv()
-    sj_key = os.getenv('Sj_Secret_key')
+    SJ_key = os.getenv('SJ_Secret_key')
 
-    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'Ruby', 'GO', '1C']
-    hh_link = 'https://api.hh.ru/vacancies'
-    sj_link = 'https://api.superjob.ru/2.0/vacancies/'
+    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
+    HH_link = 'https://api.HH.ru/vacancies'
+    SJ_link = 'https://api.superjob.ru/2.0/vacancies/'
+    
+    statistic_vacancies_HH = statistic_HH(programming_languages, HH_link)
+    statistic_vacancies_SJ = statistic_SJ(programming_languages, SJ_key, SJ_link)
 
-    statistic_hh(programming_languages, hh_link)
-    statistic_sj(programming_languages, sj_key, sj_link)
+    HH_table(statistic_vacancies_HH)
+    SJ_table(statistic_vacancies_SJ)
 
 
 if __name__ == '__main__':
