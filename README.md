@@ -21,44 +21,8 @@ The launch_id variable takes the SuperJob API key from the file.env using the [o
 ```
 SJ_key = os.getenv('SJ_Secret_key')
 ```
-## How it works
-### To begin with, 2 functions are created to get the right job references.
-Function for HeadHunter:
+## How to launch
+To run the script, you need to enter it into the console according to this example:
 ```
-get_vacancies_HH
+python crate_table_hh_and_sj.py
 ```
-Function for SuperJob:
-```
-get_vacancies_SJ
-```
-Here, with the help of the [requests](https://python-scripts.com/requests?ysclid=lyr2i4f3us982315000) library, links are created to get vacancies
-### Next, functions are created to calculate the average salary.
-Function for HeadHunter:
-```
-predict_rub_salary_HH
-```
-Function for SuperJob:
-```
-predict_rub_salary_SJ
-```
-These functions use conditional constructions to get the average salary from vacancies
-### After that, functions are created to collect all the received data and create a dictionary with values for each programming language.
-Function for HeadHunter:
-```
-statistic_HH
-```
-Function for SuperJob:
-```
-statistic_SJ
-```
-These functions are designed to collect all the information received and convert it into dictionaries with data for each programming language
-### And the last 2 functions are designed to create tables based on the values obtained.
-Function for HeadHunter:
-```
-HH_table
-```
-Function for SuperJob:
-```
-SJ_table
-```
-In these 2 functions, 2 tables are created using the [itertools](https://docs.python.org/3/library/itertools.html) library and created dictionaries (for programming languages).
