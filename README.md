@@ -12,14 +12,14 @@ pip install -r requirements.txt
 To save the data from prying eyes, we will create an .env file in which we will place: Sj_Secret_key.
 Let's do it this way: 
 ```
-Sj_Secret_key = 'the secret key that you received'
+SJ_SECRET_KEY = 'the secret key that you received'
 ```
 ## Environment variables
 Environment variables are key—value pairs that determine the settings and behavior of the operating system and programs. You can read more here [More about Environment Variables] (https://habr.com/ru/companies/gnivc/articles/792082 /)
 
 The launch_id variable takes the SuperJob API key from the file.env using the [os] library(https://docs.python.org/3/library/os.html ) using the `.getenv` method:
 ```
-SJ_key = os.getenv('SJ_Secret_key')
+SJ_key = os.getenv('SJ_SECRET_KEY')
 ```
 ## How to launch
 To run the script, you need to enter it into the console according to this example:
