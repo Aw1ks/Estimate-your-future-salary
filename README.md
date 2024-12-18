@@ -15,9 +15,9 @@ Let's do it this way:
 SJ_SECRET_KEY = 'the secret key that you received'
 ```
 ## Environment variables
-Environment variables are key—value pairs that determine the settings and behavior of the operating system and programs. You can read more here [More about Environment Variables] (https://habr.com/ru/companies/gnivc/articles/792082 /)
+Environment variables are key—value pairs that determine the settings and behavior of the operating system and programs. You can read more here [More about Environment Variables](https://habr.com/ru/companies/gnivc/articles/792082/)
 
-The launch_id variable takes the SuperJob API key from the file.env using the [os] library(https://docs.python.org/3/library/os.html ) using the `.getenv` method:
+The launch_id variable takes the SuperJob API key from the file.env using the [os library](https://docs.python.org/3/library/os.html) using the `.getenv` method:
 ```
 SJ_KEY = os.getenv('SJ_SECRET_KEY')
 ```
