@@ -19,7 +19,7 @@ Environment variables are key—value pairs that determine the settings and beha
 
 The launch_id variable takes the SuperJob API key from the file.env using the [os] library(https://docs.python.org/3/library/os.html ) using the `.getenv` method:
 ```
-SJ_key = os.getenv('SJ_SECRET_KEY')
+SJ_KEY = os.getenv('SJ_SECRET_KEY')
 ```
 ## How to launch
 To run the script, you need to enter it into the console according to this example:
