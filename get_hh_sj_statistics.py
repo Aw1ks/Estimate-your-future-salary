@@ -57,25 +57,24 @@ def get_statistics_hh(PROGRAMMING_LANGUAGES):
         all_salary_hh = []
         hh_vacancies = get_vacancies_hh(programming_language)
 
-        for vacancy_hh in hh_vacancies['items']:
-                for page in count(0):
-                    if 'pages' in hh_vacancies:
-                        if page >= hh_vacancies['pages'] - 1:
-                            break
+        for page in count(0):
+            if 'pages' in hh_vacancies:
+                if page >= hh_vacancies['pages'] - 1:
+                    break
+            for vacancy_hh in hh_vacancies['items']:
+                salary_vacancy_hh = vacancy_hh['salary']
+                if salary_vacancy_hh != None:
+                    currency_vac_hh = salary_vacancy_hh.get('currency')
 
-                    salary_vacancy_hh = vacancy_hh['salary']
-                    if salary_vacancy_hh != None:
-                        currency_vac_hh = salary_vacancy_hh.get('currency')
+                    if currency_vac_hh != 'RUR' or 'RUB':
+                        hh_average_salary = predict_rub_salary(salary_from=salary_vacancy_hh['from'], salary_to=salary_vacancy_hh['to'])
+                    all_salary_hh.append(hh_average_salary)
 
-                        if currency_vac_hh != 'RUR' or 'RUB':
-                            hh_average_salary = predict_rub_salary(salary_from=salary_vacancy_hh['from'], salary_to=salary_vacancy_hh['to'])
-                        all_salary_hh.append(hh_average_salary)
-
-        vacancies_statistic[programming_language] = {
-            "vacancies_found": hh_vacancies['found'],
-            "vacancies_processed": len(all_salary_hh),
-            "average_salary": int(sum(all_salary_hh) / len(all_salary_hh))
-        }
+            vacancies_statistic[programming_language] = {
+                "vacancies_found": hh_vacancies['found'],
+                "vacancies_processed": len(all_salary_hh),
+                "average_salary": int(sum(all_salary_hh) / len(all_salary_hh))
+            }
     return vacancies_statistic
 
 
