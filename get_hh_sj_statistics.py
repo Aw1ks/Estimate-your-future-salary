@@ -70,10 +70,15 @@ def get_statistics_hh(programming_languages):
                         hh_average_salary = predict_rub_salary(salary_from=salary_vacancy_hh['from'], salary_to=salary_vacancy_hh['to'])
                         all_salary_hh.append(hh_average_salary)
 
+                    average_salary = None
+                    if all_salary_hh:
+                        average_salary = int(sum(all_salary_hh) / len(all_salary_hh))
+
+
             vacancies_statistic[programming_language] = {
                 "vacancies_found": hh_vacancies['found'],
                 "vacancies_processed": len(all_salary_hh),
-                "average_salary": int(sum(all_salary_hh) / len(all_salary_hh))
+                "average_salary": average_salary
             }
     return vacancies_statistic
 
