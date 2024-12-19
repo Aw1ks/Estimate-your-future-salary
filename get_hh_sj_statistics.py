@@ -5,12 +5,6 @@ from itertools import count
 from dotenv import load_dotenv
 
 
-load_dotenv()
-SJ_KEY = os.getenv('SJ_SECRET_KEY')
-
-PROGRAMMING_LANGUAGES = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
-
-
 def get_vacancies_hh(programming_language):
     hh_link = 'https://api.hh.ru/vacancies'
     hh_payload = {
@@ -50,10 +44,10 @@ def predict_rub_salary(salary_from=None, salary_to=None):
     return average_salary
 
 
-def get_statistics_hh(PROGRAMMING_LANGUAGES):
+def get_statistics_hh(programming_languages):
     vacancies_statistic = {}
 
-    for programming_language in PROGRAMMING_LANGUAGES:
+    for programming_language in programming_languages:
         all_salary_hh = []
         hh_vacancies = get_vacancies_hh(programming_language)
 
@@ -80,10 +74,10 @@ def get_statistics_hh(PROGRAMMING_LANGUAGES):
     return vacancies_statistic
 
 
-def get_statistic_sj(PROGRAMMING_LANGUAGES, sj_key):
+def get_statistic_sj(programming_languages, sj_key):
     vacancies_statistic = {}
 
-    for programming_language in PROGRAMMING_LANGUAGES:
+    for programming_language in programming_languages:
         salary_vacancies = []
 
         for page in count(0, 1):
@@ -112,3 +106,14 @@ def get_statistic_sj(PROGRAMMING_LANGUAGES, sj_key):
             'average_salary': average_salary
         }
     return vacancies_statistic
+
+
+def main():
+    load_dotenv()
+    sj_key = os.getenv('SJ_SECRET_KEY')
+
+    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
+
+
+if __name__ == '__main__':
+    main()

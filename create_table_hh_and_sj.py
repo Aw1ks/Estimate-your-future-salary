@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from terminaltables import SingleTable
 
-from get_hh_sj_statistics import get_statistics_hh, get_statistic_sj, SJ_KEY, PROGRAMMING_LANGUAGES
+from get_hh_sj_statistics import get_statistics_hh, get_statistic_sj
 
 
 def creste_statistic_table(statistic_vacancies, title):
@@ -22,6 +22,16 @@ def creste_statistic_table(statistic_vacancies, title):
     print(statistic_table.table)
 
 
+
+def main():
+    load_dotenv()
+    sj_key = os.getenv('SJ_SECRET_KEY')
+
+    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
+
+    creste_statistic_table(statistic_vacancies=get_statistics_hh(programming_languages), title='HeadHunter Moscow')
+    creste_statistic_table(statistic_vacancies=get_statistic_sj(programming_languages, sj_key), title='SuperJob Moscow')
+
+
 if __name__ == '__main__':
-    creste_statistic_table(statistic_vacancies=get_statistics_hh(PROGRAMMING_LANGUAGES), title='HeadHunter Moscow')
-    creste_statistic_table(statistic_vacancies=get_statistic_sj(PROGRAMMING_LANGUAGES, SJ_KEY), title='SuperJob Moscow')
+    main()
