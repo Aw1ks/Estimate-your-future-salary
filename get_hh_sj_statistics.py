@@ -5,12 +5,15 @@ from itertools import count
 from dotenv import load_dotenv
 
 
-def get_vacancies_hh(programming_language):
+def get_vacancies_hh(programming_language, page=0):
     hh_link = 'https://api.hh.ru/vacancies'
+    moscow_area = 1
+
     hh_payload = {
         "text": programming_language, 
-        "area": 1
-        }
+        "area": moscow_area,
+        "page": page
+    }
     response_hh = requests.get(hh_link, params=hh_payload)
     response_hh.raise_for_status()
     hh_vacancies = response_hh.json()
@@ -19,9 +22,12 @@ def get_vacancies_hh(programming_language):
 
 def get_vacancies_sj(programming_language, sj_key, page):
     sj_link = 'https://api.superjob.ru/2.0/vacancies/'
+    publication_period = 0
+    moscow_town = 4
+
     sj_payload = {
-        'period': 0,
-        'town': 4,
+        'period': publication_period,
+        'town': moscow_town,
         'keyword': programming_language,
         'app_key': sj_key,
         'page': page
@@ -49,17 +55,15 @@ def get_statistics_hh(programming_languages):
 
     for programming_language in programming_languages:
         all_salary_hh = []
-        hh_vacancies = get_vacancies_hh(programming_language)
+        hh_vacancies = get_vacancies_hh(programming_language, page=0)
 
         for page in count(0):
             if 'pages' in hh_vacancies:
                 if page >= hh_vacancies['pages'] - 1:
                     break
-                
             for vacancy_hh in hh_vacancies['items']:
                 salary_vacancy_hh = vacancy_hh['salary']
-
-                if salary_vacancy_hh:
+                if salary_vacancy_hh != None:
                     currency_vac_hh = salary_vacancy_hh.get('currency')
 
                     if currency_vac_hh != 'RUR' or 'RUB':
@@ -72,6 +76,7 @@ def get_statistics_hh(programming_languages):
                 "average_salary": int(sum(all_salary_hh) / len(all_salary_hh))
             }
     return vacancies_statistic
+
 
 
 def get_statistic_sj(programming_languages, sj_key):
