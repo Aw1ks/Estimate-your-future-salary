@@ -70,7 +70,7 @@ def get_statistics_hh(PROGRAMMING_LANGUAGES):
 
                     if currency_vac_hh != 'RUR' or 'RUB':
                         hh_average_salary = predict_rub_salary(salary_from=salary_vacancy_hh['from'], salary_to=salary_vacancy_hh['to'])
-                    all_salary_hh.append(hh_average_salary)
+                        all_salary_hh.append(hh_average_salary)
 
             vacancies_statistic[programming_language] = {
                 "vacancies_found": hh_vacancies['found'],
