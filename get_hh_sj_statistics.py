@@ -50,8 +50,9 @@ def predict_rub_salary(salary_from=None, salary_to=None):
     return average_salary
 
 
-def get_statistics_hh(programming_languages):
+def get_statistics_hh():
     vacancies_statistic = {}
+    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
 
     for programming_language in programming_languages:
         all_salary_hh = []
@@ -83,8 +84,9 @@ def get_statistics_hh(programming_languages):
 
 
 
-def get_statistic_sj(programming_languages, sj_key):
+def get_statistic_sj(sj_key):
     vacancies_statistic = {}
+    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
 
     for programming_language in programming_languages:
         salary_vacancies = []
@@ -121,7 +123,7 @@ def main():
     load_dotenv()
     sj_key = os.getenv('SJ_SECRET_KEY')
 
-    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
+    
 
 
 if __name__ == '__main__':

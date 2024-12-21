@@ -27,10 +27,8 @@ def main():
     load_dotenv()
     sj_key = os.getenv('SJ_SECRET_KEY')
 
-    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
-
-    creste_statistic_table(statistic_vacancies=get_statistics_hh(programming_languages), title='HeadHunter Moscow')
-    creste_statistic_table(statistic_vacancies=get_statistic_sj(programming_languages, sj_key), title='SuperJob Moscow')
+    creste_statistic_table(statistic_vacancies=get_statistics_hh(), title='HeadHunter Moscow')
+    creste_statistic_table(statistic_vacancies=get_statistic_sj(sj_key), title='SuperJob Moscow')
 
 
 if __name__ == '__main__':
