@@ -123,8 +123,6 @@ def main():
     load_dotenv()
     sj_key = os.getenv('SJ_SECRET_KEY')
 
-    
-
 
 if __name__ == '__main__':
     main()
