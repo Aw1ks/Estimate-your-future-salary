@@ -74,7 +74,6 @@ def get_statistics_hh(programming_languages):
                     if all_salary_hh:
                         average_salary = int(sum(all_salary_hh) / len(all_salary_hh))
 
-
             vacancies_statistic[programming_language] = {
                 "vacancies_found": hh_vacancies['found'],
                 "vacancies_processed": len(all_salary_hh),
