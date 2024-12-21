@@ -63,7 +63,7 @@ def get_statistics_hh(programming_languages):
                     break
             for vacancy_hh in hh_vacancies['items']:
                 salary_vacancy_hh = vacancy_hh['salary']
-                if salary_vacancy_hh != None:
+                if salary_vacancy_hh:
                     currency_vac_hh = salary_vacancy_hh.get('currency')
 
                     if currency_vac_hh != 'RUR' or 'RUB':
