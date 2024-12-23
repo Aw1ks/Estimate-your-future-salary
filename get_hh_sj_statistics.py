@@ -3,6 +3,7 @@ import os
 
 from itertools import count
 from dotenv import load_dotenv
+from terminaltables import SingleTable
 
 
 def get_vacancies_hh(programming_language, page=0):
@@ -50,9 +51,8 @@ def predict_rub_salary(salary_from=None, salary_to=None):
     return average_salary
 
 
-def get_statistics_hh():
+def get_statistics_hh(programming_languages):
     vacancies_statistic = {}
-    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
 
     for programming_language in programming_languages:
         all_salary_hh = []
@@ -84,9 +84,8 @@ def get_statistics_hh():
 
 
 
-def get_statistic_sj(sj_key):
+def get_statistic_sj(programming_languages, sj_key):
     vacancies_statistic = {}
-    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
 
     for programming_language in programming_languages:
         salary_vacancies = []
@@ -119,9 +118,30 @@ def get_statistic_sj(sj_key):
     return vacancies_statistic
 
 
+def creste_statistic_table(statistic_vacancies, title):
+    table = [
+        ['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата'],
+    ]
+
+    for programming_language, vacancies_key in statistic_vacancies.items():
+        table.append([
+            programming_language,
+            vacancies_key['vacancies_found'],
+            vacancies_key['vacancies_processed'],
+            vacancies_key['average_salary']
+        ])
+    statistic_table = SingleTable(table, title)
+    print(statistic_table.table)
+
+
 def main():
     load_dotenv()
     sj_key = os.getenv('SJ_SECRET_KEY')
+
+    programming_languages = ['Python', 'Shell', 'C#', 'C++', 'Java', 'JavaScript', 'PHP', 'SQL', 'TypeScript']
+
+    creste_statistic_table(statistic_vacancies=get_statistics_hh(programming_languages), title='HeadHunter Moscow')
+    creste_statistic_table(statistic_vacancies=get_statistic_sj(programming_languages, sj_key), title='SuperJob Moscow')
 
 
 if __name__ == '__main__':
