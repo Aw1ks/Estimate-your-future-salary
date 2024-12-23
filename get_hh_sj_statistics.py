@@ -56,9 +56,10 @@ def get_statistics_hh(programming_languages):
 
     for programming_language in programming_languages:
         all_salary_hh = []
-        hh_vacancies = get_vacancies_hh(programming_language, page=0)
 
         for page in count(0):
+            hh_vacancies = get_vacancies_hh(programming_language, page=0)
+
             if 'pages' in hh_vacancies:
                 if page >= hh_vacancies['pages'] - 1:
                     break
@@ -81,7 +82,6 @@ def get_statistics_hh(programming_languages):
                 "average_salary": average_salary
             }
     return vacancies_statistic
-
 
 
 def get_statistic_sj(programming_languages, sj_key):
