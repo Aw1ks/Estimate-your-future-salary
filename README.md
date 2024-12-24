@@ -24,5 +24,5 @@ SJ_KEY = os.getenv('SJ_SECRET_KEY')
 ## How to launch
 To run the script, you need to enter it into the console according to this example:
 ```
-python crate_table_hh_and_sj.py
+python get_hh_sj_statistics.py
 ```
